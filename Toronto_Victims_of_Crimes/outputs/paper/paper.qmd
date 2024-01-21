@@ -1,0 +1,28 @@
+---
+title: "paper"
+author: "Chay Park"
+date: 
+format: pdf
+editor: visual
+---
+
+# Abstract
+
+# Introduction
+
+# Data
+
+# References
+
+Gelfand, Sharla. 2020. *Opendatatoronto : Access the City of Toronto Open Data Portal*
+
+R Core Team. 2020. *R: A Language and Environment for Statistical Computing.* Vienna, Austria: R Foundation for Statistical Computing. https://www.R-project.org/.
+
+Toronto Police Services. 2023. *TPS Police Annual Statistical Report - Victims of Crimes*
+
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D'Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. "Welcome to the tidyverse." *Journal of Open Source Software* 4 (43): 1686. https://doi.org/10.21105/joss.01686.
+
+\
+Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2021. *Dplyr: A Grammar of Data Manipulation.*https://CRAN.R-project.org/package=dplyr.
+
+Xie, Yihui. 2014. "Knitr: A Comprehensive Tool for Reproducible Research in R." *In Implementing Reproducible Computational Research*, edited by Victoria Stodden, Friedrich Leisch, and Roger D. Peng. Chapman; Hall/CRC. http://www.crcpress.com/product/isbn/9781466561595.
