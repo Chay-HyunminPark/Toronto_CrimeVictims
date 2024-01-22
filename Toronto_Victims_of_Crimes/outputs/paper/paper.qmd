@@ -117,7 +117,7 @@ bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Adult, fill = "Adult"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Youth, fill = "Youth"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Child, fill = "Child"), stat = "identity", position = "stack") +
-  labs(title = "Number of Reported Crimes in Different Age Group Over the Years",
+  labs(title = "Number of Reported Victims of Crimes in Different Age Group Over the Years",
        x = "Year",
        y = "Number of reported crimes") +
   scale_fill_manual(values = c(Adult = "blue", Youth = "green", Child = "orange"),
@@ -149,11 +149,11 @@ crime_subtype_table <- filtered_data %>%
   summarise(Victims_Count = sum(COUNT_))
 
 # Pivot the data to have Assault, Sexual Violation, Robbery as columns
-pivoted_table <- crime_subtype_table %>%
+pivoted_table2 <- crime_subtype_table %>%
   pivot_wider(names_from = SUBTYPE, values_from = Victims_Count, values_fill = 0)
 
 # Print the table using knitr
-kable(pivoted_table, format = "markdown", caption = "Table for Victims Count by Crime Subtype Over the Years")
+kable(pivoted_table2, format = "markdown", caption = "Table for Victims Count by Crime Subtype Over the Years")
 
 
 ```
@@ -163,20 +163,47 @@ kable(pivoted_table, format = "markdown", caption = "Table for Victims Count by 
 library(dplyr)
 library(ggplot2)
 
-# Assuming 'pivoted_table' is the table with Assault, Sexual Violation, Robbery columns from the above table code
+# Assuming 'pivoted_table2' is the table with Assault, Sexual Violation, Robbery columns from the above table code
 
 # Create bar graphs for each crime subtype
-bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
+bar_plot <- ggplot(pivoted_table2, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Assault, fill = "Assault"), stat = "identity", position = "stack") +
-  geom_bar(aes(y = Sexual_Violation, fill = "Sexual Violation"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = `Sexual Violation`, fill = "Sexual Violation"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Robbery, fill = "Robbery"), stat = "identity", position = "stack") +
   labs(title = "Victims Count by Crime Subtype Over the Years",
        x = "Year",
-       y = "Count") +
+       y = "Number of Reported Victims of Crimes") +
   scale_fill_manual(values = c("Assault" = "grey", "Sexual Violation" = "brown", "Robbery" = "pink"),
                     name = "Crime Subtype") +
   theme_minimal() +
   scale_x_continuous(breaks = seq(2014, 2022, by = 1))
+
+# Print the bar plot
+print(bar_plot)
+
+```
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Assuming 'crime_counts' is the data frame with relevant columns
+
+# Filter the data for Sexual Violation
+sexual_violation_data <- cleaned_data %>%
+  filter(SUBTYPE == "Sexual Violation")
+
+# Create a bar graph for Sexual Violation with groups for AGE_GROUP
+bar_plot <- ggplot(sexual_violation_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Victims Count of Sexual Violation by Age Group Over the Years",
+       x = "Year",
+       y = "Number of Reported Victims of Sexual Violation",
+       fill = "Age Group") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(sexual_violation_data$REPORT_YEAR), max(sexual_violation_data$REPORT_YEAR), by = 1)) +
+  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
 
 # Print the bar plot
 print(bar_plot)
