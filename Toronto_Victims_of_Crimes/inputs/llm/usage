@@ -1,0 +1,245 @@
+LLM: ChatGPT-3.5
+Date: 22 January 2024
+
+https://chat.openai.com/share/15e13ad3-4465-4d92-916e-2a87af648b04 
+
+Certainly! Here's the entire conversation:
+
+```
+Suppose we have a set of data about police annual statistical report on victims of crimes published by toronto police services using "opendatatoronto". This dataset includes all identified victims of crimes against the person, including, but not limited to, those that may have been unfounded after investigation, those that may have occurred outside the City of Toronto limits, or have no verified location. The data has columns with "_id, REPORT_YEAR, CATEGORY, SUBTYPE, ASSAULT_SUBTYPE, SEX, AGE_GROUP, AGE_COHORT, COUNT_." REPORT_YEAR describes the year crime was reported, SUBTYPE describes the crime category subtype, SEX describes the sex of identified victim, the AGE_GROUP describes the age group of identified victim, adult or youth and lastly COUNT_ describes count of identified victims. Note that duplicate persons are possible if the same person was victimized for the same offence during the same period. The file is in CSV. Write me a R code to create a table using knitr package. Sex has three values, M for male, F for female, U for unknown value. I want to eliminate unknown values and only count the number of male victims and female victims for each crime over the year. SUBTYPE_ has four values, robbery, sexual violation, assault, and other. Again, I don't want to have rows with 'other' values from SUBTYPE_ as I can't define what it is. I should have three tables as the result.
+
+Certainly! To achieve this, you can use the `dplyr` package in R for data manipulation and then use the `knitr` package to create a table. Make sure to install these packages if you haven't already:
+
+```R
+install.packages("dplyr")
+install.packages("knitr")
+```
+
+Here's an example R code to create the tables you specified:
+
+```R
+# Load required libraries
+library(dplyr)
+library(knitr)
+
+# Read the CSV file
+crime_data <- read.csv("path/to/your/file.csv")
+
+# Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
+filtered_data <- crime_data %>%
+  filter(SEX %in% c("M", "F") & SUBTYPE %in% c("robbery", "sexual violation", "assault"))
+
+# Create separate tables for each crime subtype
+table_robbery <- filtered_data %>%
+  filter(SUBTYPE == "robbery") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+table_sexual_violation <- filtered_data %>%
+  filter(SUBTYPE == "sexual violation") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+table_assault <- filtered_data %>%
+  filter(SUBTYPE == "assault") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+# Print the tables using knitr
+kable(table_robbery, format = "markdown", caption = "Table for Robbery")
+kable(table_sexual_violation, format = "markdown", caption = "Table for Sexual Violation")
+kable(table_assault, format = "markdown", caption = "Table for Assault")
+```
+
+Replace "path/to/your/file.csv" with the actual path to your CSV file. The resulting tables will be displayed in Markdown format, suitable for use with the `knitr` package.
+
+which line of code should I add to save the data in the following directory: "inputs/data/unedited_data.csv"
+
+To save the filtered data to the specified directory and file, you can add the following line of code after filtering the data:
+
+```R
+write.csv(filtered_data, file = "inputs/data/unedited_data.csv", row.names = FALSE)
+```
+
+This line uses the `write.csv` function to save the `filtered_data` dataframe to the specified file path. The `row.names = FALSE` argument ensures that row names are not included in the CSV file.
+
+Here's the modified code:
+
+```R
+# Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
+filtered_data <- crime_data %>%
+  filter(SEX %in% c("M", "F") & SUBTYPE %in% c("robbery", "sexual violation", "assault"))
+
+# Save the filtered data to a CSV file
+write.csv(filtered_data, file = "inputs/data/unedited_data.csv", row.names = FALSE)
+
+# Create separate tables for each crime subtype
+table_robbery <- filtered_data %>%
+  filter(SUBTYPE == "robbery") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+table_sexual_violation <- filtered_data %>%
+  filter(SUBTYPE == "sexual violation") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+table_assault <- filtered_data %>%
+  filter(SUBTYPE == "assault") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+# Print the tables using knitr
+kable(table_robbery, format = "markdown", caption = "Table for Robbery")
+kable(table_sexual_violation, format = "markdown", caption = "Table for Sexual Violation")
+kable(table_assault, format = "markdown", caption = "Table for Assault")
+```
+
+Now, the filtered data will be saved to "inputs/data/unedited_data.csv". Adjust the file path accordingly if needed.
+
+From this code:
+#### Preamble ####
+# Purpose: Downloads and saves the data from opendatatoronto
+# Author: Chay Park
+# Date: 20 January 2024
+# Contact: chay.park@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: download the actual data in a reproducible way using opendatatoronto. 
+# Save the data: "inputs/data/unedited_data.csv"
+
+#### Save data ####
+
+# Install the package
+install.packages("opendatatoronto")
+install.packages("knitr")
+install.packages("lubridate")
+install.packages("tidyverse")
+
+# See a list of available packages
+library(knitr)
+library(lubridate)
+library(opendatatoronto)
+library(tidyverse)
+
+packages <- list_packages(limit = 10)
+packages
+
+# Search packages by title
+victims_packages <- search_packages("victims")
+
+victims_packages
+
+# List resources from package
+victims_resources <- victims_packages %>%
+  list_package_resources()
+
+victims_resources
+
+# Download the resources
+victims_statistics <- victims_resources %>%
+  head(1) %>%
+  get_resource()
+
+victims_statistics
+
+# Write CSV file
+write_csv(
+  x = victims_resources,
+  file = "unedited_data.csv"
+)
+head(victims_statistics)
+
+write me a code to create a table that counts the value of child victims, youth victims, adult victims over the year from 2014 to 2022 from the cleaned_data set
+
+Certainly! If you want to create a table that counts the number of child, youth, and adult victims over the years 2014 to 2022 from the `cleaned_data` set, you can use the following code:
+
+```r
+# Load required libraries
+library(dplyr)
+library(knitr)
+library(lubridate)
+library(tidyverse)
+
+# Read the cleaned_data CSV file
+cleaned_data <- read.csv("path/to/your/cleaned_data.csv")
+
+# Create a new column for Age Cohort based on Age Group
+cleaned_data <- cleaned_data %>%
+  mutate(Age_Cohort = case_when(
+    AGE_GROUP %in% c("0-4", "5-9", "10-14") ~ "Child",
+    AGE_GROUP %in% c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85 and over") ~ "Adult",
+    TRUE ~ "Youth"
+  ))
+
+# Filter data for the years 2014 to 2022
+filtered_data <- cleaned_data %>%
+  filter(REPORT_YEAR >= 2014 & REPORT_YEAR <= 2022)
+
+# Create a table counting the number of victims for each Age Cohort over the years
+age_cohort_table <- filtered_data %>%
+  group_by(REPORT_YEAR, Age_Cohort) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+# Print the table using knitr
+kable(age_cohort_table, format = "markdown", caption = "Table for Age Cohort Victims Over the Years")
+```
+
+Replace `"path/to/your/cleaned_data.csv"` with the actual path to your `cleaned_data.csv` file. This code creates a new column `Age_Cohort` based on the `AGE_GROUP` and then filters the data for the years 2014 to 2022. Finally, it creates a table counting the number of victims for each age cohort over the specified years.
+
+Generate a code to graph the above table. y-axis is the count, x-axis is the year. I want to see the bar graphs for each age group. 
+
+Certainly! You can use the `ggplot2` package to create bar graphs for each age group. Here's the code:
+
+```r
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Assuming 'pivoted_table' is the table with Adult, Youth, Child columns
+# If not, replace it with your actual data frame
+
+# Create bar graphs for each age group
+bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
+  geom_bar(aes(y = Adult), fill = "blue", stat = "identity", position = "stack") +
+  geom_bar(aes(y = Youth), fill = "green", stat = "identity", position = "stack") +
+  geom_bar(aes(y = Child), fill = "orange", stat = "identity", position = "stack") +
+  labs(title = "Victims Count by Age Group Over the Years",
+       x = "Year",
+       y = "Count") +
+  scale_fill_manual(values = c(Adult = "blue", Youth = "green", Child = "orange")) +
+  theme_minimal()
+
+# Print the bar plot
+print(bar_plot)
+```
+
+This code creates a bar plot where each bar represents the count of victims for each age group over the years. Adjust the colors and other settings as needed. If you have a different data frame or variable name for your table, replace `pivoted_table` with the actual name.
+
+write me a code to create a table that counts the value of victims for sexual violation, assault, robbery respectively over the year from 2014 to 2022 from the cleaned_data set.
+
+Certainly! If you want to create a table that counts the number of victims for sexual violation, assault, and robbery over the years 2014 to 2022 from the `cleaned_data` set, you can use the following code:
+
+```r
+# Load required libraries
+library(dplyr)
+library(knitr)
+library(lubridate)
+library(tidyverse)
+
+# Read the cleaned_data CSV file
+cleaned_data <- read.csv("path/to/your/cleaned_data.csv")
+
+# Filter data for the years 2014 to 2022
+filtered_data <- cleaned_data %>%
+  filter(REPORT_YEAR >= 2014 & REPORT_YEAR <= 2022)
+
+# Create a table counting the number of victims for each crime subtype over the years
+crime_subtype_table <- filtered_data %>%
+  group_by(REPORT_YEAR, SUBTYPE) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+# Print the table using knitr
+kable(crime_subtype_table, format = "markdown", caption = "Table for Victims Count by Crime Subtype Over the Years")
+```
+
+Replace `"path/to/your/cleaned_data.csv"` with the actual path to your `cleaned_data.csv` file. This code creates a table with columns for each crime subtype and each row representing the year, counting the number of victims for each subtype over the specified years. Adjust the file path as needed for your specific file structure.
