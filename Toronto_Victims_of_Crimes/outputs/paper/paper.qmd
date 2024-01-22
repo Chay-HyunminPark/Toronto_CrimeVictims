@@ -6,15 +6,26 @@ format: pdf
 editor: visual
 ---
 
+```{r}
+#### Preamble ####
+# Purpose: Read in data from the Toronto Police Annual Report - Victims of Crimes and provide relevant tables and graphs of the dataset.
+# Author: Chay Park
+# Email: chay.park@mail.utoronto.ca
+# Date: Jan 22, 2024
+# Prerequisites: Need to know where to get Toronto Police Annual Report - Victims of Crimes
+```
+
 # Abstract
 
 ### top-level finding, what is the one thing that we learn about the world because of this paper?
 
-Often we see crimes on the global news and majority is happening in the States. Canada is known to be relatively safe country around the world. Toronto is one of the biggest city in Canada and thus the most populated. By investigating the dataset from Toronto Police Services, this report demonstrate the top four crimes reported over the year from 2014 to 2022.
+Often we see crimes on the global news and majority is happening in the States. Canada is known to be relatively safe country around the world. Toronto is one of the biggest city in Canada and thus the most populated. By investigating the dataset from Toronto Police Services, this report demonstrate the top three crimes reported over the year from 2014 to 2022.
 
 # Introduction
 
-Why I deal with this data? How would you answer to the following question? Between male and female, which sex would count more as a victim of sexual violation, which age group is proned to be the victims of assault? We could assume that it is mostly young age group or female are prone to be the victims of crimes. Often people judge and assume which leads to Misperception of victims of crimes.
+Why I deal with this data? General trends of victims reporting following crimes, robbery, assault, sexual violation. Tables and graphs support visualize the trends over the year. From the dataset, we want to find out whether there are any point outlining from the trend between sexes, age_group, year. Then draw a correlation between other factor such as global pandemic.
+
+Impact of pandemic on reporting crimes,
 
 This paper use R to analyze a dataset from opendatatoronto. This dataset includes all identified victims of crimes against the person, including, but not limited to, those that may have been deemed unfounded after investigation, those that may have occurred outside the City of Toronto limits, or have no verified location. The paper extract age group, count, sex, subtype of crimes, report year.
 
@@ -22,16 +33,104 @@ Visualize trend among the sex, age group per crime. The tendency of male not rep
 
 # Data
 
-The data is
+The unknown values for age_group, age_cohort, sex are excluded as they do not contribute to define data groups explicitly. The data set does not offer explicit details about the unknown values. Similarly, the other crime is not included in the cleaned_data set due to its uncertainty. Thus, the cleaned_data only serve top three reported crimes; robbery, assault, and sexual violation. Moreover, the sex is divided into two, female and male. Age group has three subgroups, adult, youth, child.
 
 ```{r}
-# Install required packages
+# Install the necessary packages if not already installed
+# install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse"))
 
-install.packages("dplyr")
-install.packages("knitr")
-install.packages("lubridate")
-install.packages("tidyverse")
+# Load required libraries
+library(dplyr)
+library(knitr)
+library(lubridate)
+library(tidyverse)
+
+# Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
+cleaned_data <- unedited_data %>%
+  filter(SEX %in% c("M", "F") & AGE_GROUP != "Unknown" & SUBTYPE != "Other")
+
+head(cleaned_data)
 ```
+
+The table below showcases the general trend on the number of victims in different age group. Age information is based on the year that crime was reported. Adult is considered the group at an age of 18 or older. The age of the youth group is between 12 to 17. Below 12 is considered the child group.
+
+```{r}
+#### Table 1a ####
+# Count the Child group victims, Youth group victims, Adult group victims over the year from 2014 to 2022
+####  ####
+
+# Load required libraries
+library(dplyr)
+library(knitr)
+library(lubridate)
+library(tidyverse)
+
+# Filter rows with Adult, Child, and Youth in AGE_GROUP
+filtered_data <- cleaned_data %>%
+  filter(AGE_GROUP %in% c("Adult", "Child", "Youth"))
+
+# Create a new column for Age Cohort based on Age Group
+filtered_data <- filtered_data %>%
+  mutate(Age_Cohort = case_when(
+    AGE_GROUP == "Child" ~ "Child",
+    AGE_GROUP == "Adult" ~ "Adult",
+    AGE_GROUP == "Youth" ~ "Youth",
+    TRUE ~ "Other"  # Include an "Other" category for any unexpected values
+  ))
+
+# Filter data for the years 2014 to 2022
+filtered_data <- filtered_data %>%
+  filter(REPORT_YEAR >= 2014 & REPORT_YEAR <= 2022)
+
+# Create a table counting the number of victims for each Age Cohort over the years
+age_cohort_table <- filtered_data %>%
+  group_by(REPORT_YEAR, Age_Cohort) %>%
+  summarise(Victims_Count = sum(COUNT_))
+
+# Pivot the data to have Adult, Youth, Child as columns in that order
+pivoted_table <- age_cohort_table %>%
+  pivot_wider(names_from = Age_Cohort, values_from = Victims_Count, values_fill = 0, 
+              values_fn = list(Victims_Count = sum)) %>%
+  select(REPORT_YEAR, Adult, Youth, Child)
+
+# Print the table using knitr
+kable(pivoted_table, format = "markdown", caption = "Total number of victims in different age group from 2014 to 2022")
+
+
+```
+
+Table 1a counts the total number of victims for each age group over the years. It is obvious to find out that Adult victim group is reported the most and the Child victim group is reported the least. Also, it is noticeable that in 2020, the reported number of victims are far less than the other years. In three different age group, crime reporting rate significantly reduced by the impact of COVID and its lockdown.
+
+```{r}
+#### Bar graph 1a ####
+# Bar graph 1a illustrates the number of reported crimes in different age group over the year from 2014 to 2022. 
+#### ####
+
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Refer to the pivoted table from table 1a
+
+# Create bar graphs for each age group
+bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
+  geom_bar(aes(y = Adult, fill = "Adult"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = Youth, fill = "Youth"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = Child, fill = "Child"), stat = "identity", position = "stack") +
+  labs(title = "Number of Reported Crimes in Different Age Group Over the Years",
+       x = "Year",
+       y = "Number of reported crimes") +
+  scale_fill_manual(values = c(Adult = "blue", Youth = "green", Child = "orange"),
+                    name = "Age Group") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(2014, 2022, by = 1))
+
+# Print the bar plot
+print(bar_plot)
+
+```
+
+Bar graph 1a refers table 1a. By visualizing the age group into a bar per year, it is clear to see that majority of victims of reported crimes are adult. Also, the bars are showing ascending order from the year 2014 to 2018 but the reported crimes significantly drop between 2019 and 2020. One possible reason is because of COVID.
 
 ```{r}
 # Load required libraries
@@ -40,57 +139,47 @@ library(knitr)
 library(lubridate)
 library(tidyverse)
 
-# Input filtered_data from the R script (saved as 02-data-cleaning) that was separately saved to clean the data set
+# Filter data for the years 2014 to 2022
+filtered_data <- cleaned_data %>%
+  filter(REPORT_YEAR >= 2014 & REPORT_YEAR <= 2022)
 
-# Create separate tables for each crime subtype
-table_robbery <- filtered_data %>%
-  filter(SUBTYPE == "Robbery") %>%
-  group_by(REPORT_YEAR, SEX) %>%
-  summarise(Victims_Count = sum(COUNT_)) %>%
-  spread(key = SEX, value = Victims_Count)
+# Create a table counting the number of victims for each crime subtype over the years
+crime_subtype_table <- filtered_data %>%
+  group_by(REPORT_YEAR, SUBTYPE) %>%
+  summarise(Victims_Count = sum(COUNT_))
 
-table_sexual_violation <- filtered_data %>%
-  filter(SUBTYPE == "Sexual Violation") %>%
-  group_by(REPORT_YEAR, SEX) %>%
-  summarise(Victims_Count = sum(COUNT_)) %>%
-  spread(key = SEX, value = Victims_Count)
+# Pivot the data to have Assault, Sexual Violation, Robbery as columns
+pivoted_table <- crime_subtype_table %>%
+  pivot_wider(names_from = SUBTYPE, values_from = Victims_Count, values_fill = 0)
 
-table_assault <- filtered_data %>%
-  filter(SUBTYPE == "Assault") %>%
-  group_by(REPORT_YEAR, SEX) %>%
-  summarise(Victims_Count = sum(COUNT_)) %>%
-  spread(key = SEX, value = Victims_Count)
+# Print the table using knitr
+kable(pivoted_table, format = "markdown", caption = "Table for Victims Count by Crime Subtype Over the Years")
 
-# Print the tables using knitr
-kable(table_robbery, format = "markdown", caption = "Table for Robbery")
-kable(table_sexual_violation, format = "markdown", caption = "Table for Sexual Violation")
-kable(table_assault, format = "markdown", caption = "Table for Assault")
+
 ```
 
 ```{r}
-# Plotting using ggplot2
-# Define a function to create a count chart
-plot_count_chart <- function(data, crime_type) {
-  ggplot(data, aes(x = REPORT_YEAR, y = M, color = "Male")) +
-    geom_point() +
-    geom_line() +
-    geom_point(aes(y = F, color = "Female")) +
-    labs(title = paste("Count Chart for", crime_type),
-         x = "Year Reported",
-         y = "Count",
-         color = "Sex") +
-    scale_color_manual(values = c("Male" = "purple", "Female" = "blue"))
-}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
 
-# Create count charts
-plot_robbery <- plot_count_chart(table_robbery, "Robbery")
-plot_sexual_violation <- plot_count_chart(table_sexual_violation, "Sexual Violation")
-plot_assault <- plot_count_chart(table_assault, "Assault")
+# Assuming 'pivoted_table' is the table with Assault, Sexual Violation, Robbery columns from the above table code
 
-# Print the plots
-print(plot_robbery)
-print(plot_sexual_violation)
-print(plot_assault)
+# Create bar graphs for each crime subtype
+bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
+  geom_bar(aes(y = Assault, fill = "Assault"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = Sexual_Violation, fill = "Sexual Violation"), stat = "identity", position = "stack") +
+  geom_bar(aes(y = Robbery, fill = "Robbery"), stat = "identity", position = "stack") +
+  labs(title = "Victims Count by Crime Subtype Over the Years",
+       x = "Year",
+       y = "Count") +
+  scale_fill_manual(values = c("Assault" = "grey", "Sexual Violation" = "brown", "Robbery" = "pink"),
+                    name = "Crime Subtype") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(2014, 2022, by = 1))
+
+# Print the bar plot
+print(bar_plot)
 ```
 
 # References
