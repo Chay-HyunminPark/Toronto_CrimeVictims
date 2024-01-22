@@ -10,10 +10,7 @@
 #### Save data ####
 
 # Install the package
-install.packages("opendatatoronto")
-install.packages("knitr")
-install.packages("lubridate")
-install.packages("tidyverse")
+# install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse"))
 
 # See a list of available packages
 library(knitr)
