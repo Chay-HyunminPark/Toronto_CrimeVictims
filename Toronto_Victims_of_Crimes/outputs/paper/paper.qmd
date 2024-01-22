@@ -1,18 +1,101 @@
 ---
 title: "paper"
 author: "Chay Park"
-date: 
+date: 22 January 2024
 format: pdf
 editor: visual
 ---
 
 # Abstract
 
+### top-level finding, what is the one thing that we learn about the world because of this paper?
+
+Often we see crimes on the global news and majority is happening in the States. Canada is known to be relatively safe country around the world. Toronto is one of the biggest city in Canada and thus the most populated. By investigating the dataset from Toronto Police Services, this report demonstrate the top four crimes reported over the year from 2014 to 2022.
+
 # Introduction
+
+Why I deal with this data? How would you answer to the following question? Between male and female, which sex would count more as a victim of sexual violation, which age group is proned to be the victims of assault? We could assume that it is mostly young age group or female are prone to be the victims of crimes. Often people judge and assume which leads to Misperception of victims of crimes.
+
+This paper use R to analyze a dataset from opendatatoronto. This dataset includes all identified victims of crimes against the person, including, but not limited to, those that may have been deemed unfounded after investigation, those that may have occurred outside the City of Toronto limits, or have no verified location. The paper extract age group, count, sex, subtype of crimes, report year.
+
+Visualize trend among the sex, age group per crime. The tendency of male not reporting might skew the result.
 
 # Data
 
+The data is
+
+```{r}
+# Install required packages
+
+install.packages("dplyr")
+install.packages("knitr")
+install.packages("lubridate")
+install.packages("tidyverse")
+```
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(knitr)
+library(lubridate)
+library(tidyverse)
+
+# Input filtered_data from the R script (saved as 02-data-cleaning) that was separately saved to clean the data set
+
+# Create separate tables for each crime subtype
+table_robbery <- filtered_data %>%
+  filter(SUBTYPE == "Robbery") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_)) %>%
+  spread(key = SEX, value = Victims_Count)
+
+table_sexual_violation <- filtered_data %>%
+  filter(SUBTYPE == "Sexual Violation") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_)) %>%
+  spread(key = SEX, value = Victims_Count)
+
+table_assault <- filtered_data %>%
+  filter(SUBTYPE == "Assault") %>%
+  group_by(REPORT_YEAR, SEX) %>%
+  summarise(Victims_Count = sum(COUNT_)) %>%
+  spread(key = SEX, value = Victims_Count)
+
+# Print the tables using knitr
+kable(table_robbery, format = "markdown", caption = "Table for Robbery")
+kable(table_sexual_violation, format = "markdown", caption = "Table for Sexual Violation")
+kable(table_assault, format = "markdown", caption = "Table for Assault")
+```
+
+```{r}
+# Plotting using ggplot2
+# Define a function to create a count chart
+plot_count_chart <- function(data, crime_type) {
+  ggplot(data, aes(x = REPORT_YEAR, y = M, color = "Male")) +
+    geom_point() +
+    geom_line() +
+    geom_point(aes(y = F, color = "Female")) +
+    labs(title = paste("Count Chart for", crime_type),
+         x = "Year Reported",
+         y = "Count",
+         color = "Sex") +
+    scale_color_manual(values = c("Male" = "purple", "Female" = "blue"))
+}
+
+# Create count charts
+plot_robbery <- plot_count_chart(table_robbery, "Robbery")
+plot_sexual_violation <- plot_count_chart(table_sexual_violation, "Sexual Violation")
+plot_assault <- plot_count_chart(table_assault, "Assault")
+
+# Print the plots
+print(plot_robbery)
+print(plot_sexual_violation)
+print(plot_assault)
+```
+
 # References
+
+### should be added using BibTeX, reference R and any R pckgs you use, as well as the dataset.
 
 Gelfand, Sharla. 2020. *Opendatatoronto : Access the City of Toronto Open Data Portal*
 
