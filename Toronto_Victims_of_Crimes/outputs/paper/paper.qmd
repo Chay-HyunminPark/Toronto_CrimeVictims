@@ -45,6 +45,9 @@ library(knitr)
 library(lubridate)
 library(tidyverse)
 
+# Read CSV
+unedited_data <- read.csv("Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
+
 # Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
 cleaned_data <- unedited_data %>%
   filter(SEX %in% c("M", "F") & AGE_GROUP != "Unknown" & SUBTYPE != "Other")
@@ -130,7 +133,85 @@ print(bar_plot)
 
 ```
 
-Bar graph 1a refers table 1a. By visualizing the age group into a bar per year, it is clear to see that majority of victims of reported crimes are adult. Also, the bars are showing ascending order from the year 2014 to 2018 but the reported crimes significantly drop between 2019 and 2020. One possible reason is because of COVID.
+Bar graph 1a refers table 1a. By visualizing the age group into a bar per year, it is clear to see that majority of victims of reported crimes are adult. Also, the bars are showing ascending order from the year 2014 to 2018 but the reported crimes significantly drop between 2019 and 2020. One possible reason is because of COVID. Correlation between COVID pandemic and report crime rates 논문 찾아서 첨부
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Filter the data for Sexual Violation
+sexual_violation_data <- cleaned_data %>%
+  filter(SUBTYPE == "Sexual Violation")
+
+# Create a bar graph for Sexual Violation with groups for AGE_GROUP
+bar_plot <- ggplot(sexual_violation_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Victims Count of Sexual Violation by Age Group Over the Years",
+       x = "Year",
+       y = "Number of Reported Victims of Sexual Violation",
+       fill = "Age Group") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(sexual_violation_data$REPORT_YEAR), max(sexual_violation_data$REPORT_YEAR), by = 1)) +
+  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
+
+# Print the bar plot
+print(bar_plot)
+```
+
+From 2014 to 2020, the trend shows that the adult group is twice the size of the child group. Up until 2020, victims of sexual violation was predominantly adult age group. However, as of 2021, the youth victim group surpass the amount of the adult victim group. 무슨 사건이 일어났을까? 왜 youth group이 더 높아졌는지 사유 찾기
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Filter the data for Assault
+assault_data <- cleaned_data %>%
+  filter(SUBTYPE == "Assault")
+
+# Create a bar graph for Assault with groups for AGE_GROUP
+bar_plot <- ggplot(assault_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Victims Count of Assault by Age Group Over the Years",
+       x = "Year",
+       y = "Number of Reported Victims of Assault",
+       fill = "Age Group") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(assault_data$REPORT_YEAR), max(assault_data$REPORT_YEAR), by = 1)) +
+  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
+
+# Print the bar plot
+print(bar_plot)
+```
+
+The graph illustrates the ascending trend in number of victims of assault in city of Toronto over the year from 2014 to 2022. COVID does not seem to be a factor that skews the trend. Though, size of both child and youth victim groups got halved. Compared to child victim group, size of youth victim group grows fast.
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Filter the data for Robbery
+robbery_data <- cleaned_data %>%
+  filter(SUBTYPE == "Robbery")
+
+# Create a bar graph for Robbery with groups for AGE_GROUP
+bar_plot <- ggplot(robbery_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Victims Count of Robbery by Age Group Over the Years",
+       x = "Year",
+       y = "Number of Reported Victims of Robbery",
+       fill = "Age Group") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(robbery_data$REPORT_YEAR), max(robbery_data$REPORT_YEAR), by = 1)) +
+  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
+
+# Print the bar plot
+print(bar_plot)
+```
+
+As of 2018, youth group of victims of robbery diminished and it keeps at the lower level. COVID pandemic is the factor of bar graphs on the number of victim of robbery in different age group over the year. In 2020, victims of robbery in every age group significantly decreased. We could assume that lockdown mandate affect the decrease in victims.
 
 ```{r}
 # Load required libraries
@@ -181,32 +262,6 @@ bar_plot <- ggplot(pivoted_table2, aes(x = REPORT_YEAR)) +
 # Print the bar plot
 print(bar_plot)
 
-```
-
-```{r}
-# Load required libraries
-library(dplyr)
-library(ggplot2)
-
-# Assuming 'crime_counts' is the data frame with relevant columns
-
-# Filter the data for Sexual Violation
-sexual_violation_data <- cleaned_data %>%
-  filter(SUBTYPE == "Sexual Violation")
-
-# Create a bar graph for Sexual Violation with groups for AGE_GROUP
-bar_plot <- ggplot(sexual_violation_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Victims Count of Sexual Violation by Age Group Over the Years",
-       x = "Year",
-       y = "Number of Reported Victims of Sexual Violation",
-       fill = "Age Group") +
-  theme_minimal() +
-  scale_x_continuous(breaks = seq(min(sexual_violation_data$REPORT_YEAR), max(sexual_violation_data$REPORT_YEAR), by = 1)) +
-  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
-
-# Print the bar plot
-print(bar_plot)
 ```
 
 # References
