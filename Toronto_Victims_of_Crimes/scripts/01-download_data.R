@@ -11,9 +11,16 @@
 
 # Install the package
 install.packages("opendatatoronto")
+install.packages("knitr")
+install.packages("lubridate")
+install.packages("tidyverse")
 
 # See a list of available packages
+library(knitr)
+library(lubridate)
 library(opendatatoronto)
+library(tidyverse)
+
 packages <- list_packages(limit = 10)
 packages
 
@@ -34,3 +41,10 @@ victims_statistics <- victims_resources %>%
   get_resource()
 
 victims_statistics
+
+# Write CSV file
+write_csv(
+  x = victims_resources,
+  file = "unedited_data.csv"
+)
+head(victims_statistics)
