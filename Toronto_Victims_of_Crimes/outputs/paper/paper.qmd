@@ -1,12 +1,19 @@
 ---
 title: "paper"
 author: "Chay Park"
-date: 22 January 2024
+date: today
 format: pdf
 editor: visual
+bibliography: references.bib
 ---
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| include: false
+
 #### Preamble ####
 # Purpose: Read in data from the Toronto Police Annual Report - Victims of Crimes and provide relevant tables and graphs of the dataset.
 # Author: Chay Park
@@ -35,39 +42,30 @@ Visualize trend among the sex, age group per crime. The tendency of male not rep
 
 The unknown values for age_group, age_cohort, sex are excluded as they do not contribute to define data groups explicitly. The data set does not offer explicit details about the unknown values. Similarly, the other crime is not included in the cleaned_data set due to its uncertainty. Thus, the cleaned_data only serve top three reported crimes; robbery, assault, and sexual violation. Moreover, the sex is divided into two, female and male. Age group has three subgroups, adult, youth, child.
 
-```{r}
-# Install the necessary packages if not already installed
-# install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse"))
-
-# Load required libraries
-library(dplyr)
-library(knitr)
-library(lubridate)
-library(tidyverse)
-
-# list files
-list.files(path = "Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
-unedited_data <- list.files(path = "Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
-
-# Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
-cleaned_data <- unedited_data %>%
-  filter(SEX %in% c("M", "F") & AGE_GROUP != "Unknown" & SUBTYPE != "Other")
-
-head(cleaned_data)
-```
-
 The table below showcases the general trend on the number of victims in different age group. Age information is based on the year that crime was reported. Adult is considered the group at an age of 18 or older. The age of the youth group is between 12 to 17. Below 12 is considered the child group.
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 #### Table 1a ####
 # Count the Child group victims, Youth group victims, Adult group victims over the year from 2014 to 2022
 ####  ####
 
+# Install the necessary packages if not already installed
+install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse", "flextable"))
+
 # Load required libraries
 library(dplyr)
 library(knitr)
 library(lubridate)
 library(tidyverse)
+library(flextable)
+
+# Load the csv file
+cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
 
 # Filter rows with Adult, Child, and Youth in AGE_GROUP
 filtered_data <- cleaned_data %>%
@@ -97,15 +95,19 @@ pivoted_table <- age_cohort_table %>%
               values_fn = list(Victims_Count = sum)) %>%
   select(REPORT_YEAR, Adult, Youth, Child)
 
-# Print the table using knitr
-kable(pivoted_table, format = "markdown", caption = "Total number of victims in different age group from 2014 to 2022")
-
+# Print the table
+flextable(head(pivoted_table))
 
 ```
 
 Table 1a counts the total number of victims for each age group over the years. It is obvious to find out that Adult victim group is reported the most and the Child victim group is reported the least. Also, it is noticeable that in 2020, the reported number of victims are far less than the other years. In three different age group, crime reporting rate significantly reduced by the impact of COVID and its lockdown.
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 #### Bar graph 1a ####
 # Bar graph 1a illustrates the number of reported crimes in different age group over the year from 2014 to 2022. 
 #### ####
@@ -137,9 +139,17 @@ print(bar_plot)
 Bar graph 1a refers table 1a. By visualizing the age group into a bar per year, it is clear to see that majority of victims of reported crimes are adult. Also, the bars are showing ascending order from the year 2014 to 2018 but the reported crimes significantly drop between 2019 and 2020. One possible reason is because of COVID. Correlation between COVID pandemic and report crime rates 논문 찾아서 첨부
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 # Load required libraries
 library(dplyr)
 library(ggplot2)
+
+# Load the csv file
+cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
 
 # Filter the data for Sexual Violation
 sexual_violation_data <- cleaned_data %>%
@@ -163,9 +173,17 @@ print(bar_plot)
 From 2014 to 2020, the trend shows that the adult group is twice the size of the child group. Up until 2020, victims of sexual violation was predominantly adult age group. However, as of 2021, the youth victim group surpass the amount of the adult victim group. 무슨 사건이 일어났을까? 왜 youth group이 더 높아졌는지 사유 찾기
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 # Load required libraries
 library(dplyr)
 library(ggplot2)
+
+# Load the csv file
+cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
 
 # Filter the data for Assault
 assault_data <- cleaned_data %>%
@@ -189,9 +207,17 @@ print(bar_plot)
 The graph illustrates the ascending trend in number of victims of assault in city of Toronto over the year from 2014 to 2022. COVID does not seem to be a factor that skews the trend. Though, size of both child and youth victim groups got halved. Compared to child victim group, size of youth victim group grows fast.
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 # Load required libraries
 library(dplyr)
 library(ggplot2)
+
+# Load the csv file
+cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
 
 # Filter the data for Robbery
 robbery_data <- cleaned_data %>%
@@ -215,11 +241,20 @@ print(bar_plot)
 As of 2018, youth group of victims of robbery diminished and it keeps at the lower level. COVID pandemic is the factor of bar graphs on the number of victim of robbery in different age group over the year. In 2020, victims of robbery in every age group significantly decreased. We could assume that lockdown mandate affect the decrease in victims.
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 # Load required libraries
 library(dplyr)
 library(knitr)
 library(lubridate)
 library(tidyverse)
+library(flextable)
+
+# Load the csv file
+cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
 
 # Filter data for the years 2014 to 2022
 filtered_data <- cleaned_data %>%
@@ -234,16 +269,22 @@ crime_subtype_table <- filtered_data %>%
 pivoted_table2 <- crime_subtype_table %>%
   pivot_wider(names_from = SUBTYPE, values_from = Victims_Count, values_fill = 0)
 
-# Print the table using knitr
-kable(pivoted_table2, format = "markdown", caption = "Table for Victims Count by Crime Subtype Over the Years")
 
+# Print the table
+flextable(head(pivoted_table2))
 
 ```
 
 ```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
 # Load required libraries
 library(dplyr)
 library(ggplot2)
+
 
 # Assuming 'pivoted_table2' is the table with Assault, Sexual Violation, Robbery columns from the above table code
 
@@ -267,17 +308,6 @@ print(bar_plot)
 
 # References
 
-### should be added using BibTeX,
-
-Gelfand, Sharla. 2020. *Opendatatoronto : Access the City of Toronto Open Data Portal*
-
-R Core Team. 2020. *R: A Language and Environment for Statistical Computing.* Vienna, Austria: R Foundation for Statistical Computing. https://www.R-project.org/.
-
-Toronto Police Services. 2023. *TPS Police Annual Statistical Report - Victims of Crimes*
-
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D'Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. "Welcome to the tidyverse." *Journal of Open Source Software* 4 (43): 1686. https://doi.org/10.21105/joss.01686.
-
-\
-Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2021. *Dplyr: A Grammar of Data Manipulation.*https://CRAN.R-project.org/package=dplyr.
-
-Xie, Yihui. 2014. "Knitr: A Comprehensive Tool for Reproducible Research in R." *In Implementing Reproducible Computational Research*, edited by Victoria Stodden, Friedrich Leisch, and Roger D. Peng. Chapman; Hall/CRC. http://www.crcpress.com/product/isbn/9781466561595.
+---
+nocite: '@*'
+---
