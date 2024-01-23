@@ -45,8 +45,9 @@ library(knitr)
 library(lubridate)
 library(tidyverse)
 
-# Read CSV
-unedited_data <- read.csv("Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
+# list files
+list.files(path = "Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
+unedited_data <- list.files(path = "Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
 
 # Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
 cleaned_data <- unedited_data %>%
@@ -266,7 +267,7 @@ print(bar_plot)
 
 # References
 
-### should be added using BibTeX, reference R and any R pckgs you use, as well as the dataset.
+### should be added using BibTeX,
 
 Gelfand, Sharla. 2020. *Opendatatoronto : Access the City of Toronto Open Data Portal*
 
