@@ -5,6 +5,7 @@ date: today
 format: pdf
 editor: visual
 bibliography: references.bib
+prefer-html: true
 ---
 
 ```{r}
@@ -24,7 +25,7 @@ bibliography: references.bib
 
 # Abstract
 
-### Top-level finding, what is the one thing that we learn about the world because of this paper?
+### top-level finding, what is the one thing that we learn about the world because of this paper?
 
 Often we see crimes on the global news and majority is happening in the States. Canada is known to be relatively safe country around the world. Toronto is one of the biggest city in Canada and thus the most populated. By investigating the dataset from Toronto Police Services, this report demonstrate the top three crimes reported over the year from 2014 to 2022.
 
@@ -276,11 +277,11 @@ crime_subtype_table <- filtered_data %>%
   summarise(Victims_Count = sum(COUNT_))
 
 # Pivot the data to have Assault, Sexual Violation, Robbery as columns
-pivoted_table2 <- crime_subtype_table %>%
+pivoted_table_2 <- crime_subtype_table %>%
   pivot_wider(names_from = SUBTYPE, values_from = Victims_Count, values_fill = 0)
 
 # Print the table using kable with additional styling
-kable(pivoted_table2, caption = "Total number of victims counted for each crime from the year 2014 to 2022", format = "html") %>%
+kable(pivoted_table_2, caption = "Total number of victims counted for each crime from the year 2014 to 2022", format = "html") %>%
   kable_styling(full_width = FALSE) %>%
   add_header_above(c(" ", "Victims Count" = 3))
 
@@ -299,10 +300,10 @@ library(dplyr)
 library(ggplot2)
 
 
-# Assuming 'pivoted_table2' is the table with Assault, Sexual Violation, Robbery columns from the above table code
+# Assuming 'pivoted_table_2' is the table with Assault, Sexual Violation, Robbery columns from the above table code
 
 # Create bar graphs for each crime subtype
-bar_plot <- ggplot(pivoted_table2, aes(x = REPORT_YEAR)) +
+bar_plot <- ggplot(pivoted_table_2, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Assault, fill = "Assault"), stat = "identity", position = "stack") +
   geom_bar(aes(y = `Sexual Violation`, fill = "Sexual Violation"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Robbery, fill = "Robbery"), stat = "identity", position = "stack") +
