@@ -42,20 +42,22 @@ Visualize trend among the sex, age group per crime. The tendency of male not rep
 
 The unknown values for age_group, age_cohort, sex are excluded as they do not contribute to define data groups explicitly. The data set does not offer explicit details about the unknown values. Similarly, the other crime is not included in the cleaned_data set due to its uncertainty. Thus, the cleaned_data only serve top three reported crimes; robbery, assault, and sexual violation. Moreover, the sex is divided into two, female and male. Age group has three subgroups, adult, youth, child.
 
-The table below showcases the general trend on the number of victims in different age group. Age information is based on the year that crime was reported. Adult is considered the group at an age of 18 or older. The age of the youth group is between 12 to 17. Below 12 is considered the child group.
+The table (@tbl-totalsum_table) below showcases the general trend on the number of victims in different age group. Age information is based on the year that crime was reported. Adult is considered the group at an age of 18 or older. The age of the youth group is between 12 to 17. Below 12 is considered the child group.
 
 ```{r}
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-totalsum-table
+#| tbl-cap: "Total sum of victims in different age group throughout the years"
 
 #### Table 1a ####
 # Count the Child group victims, Youth group victims, Adult group victims over the year from 2014 to 2022
 ####  ####
 
 # Install the necessary packages if not already installed
-install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse", "flextable"))
+# install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse", "flextable"))
 
 # Load required libraries
 library(dplyr)
@@ -100,13 +102,15 @@ flextable(head(pivoted_table))
 
 ```
 
-Table 1a counts the total number of victims for each age group over the years. It is obvious to find out that Adult victim group is reported the most and the Child victim group is reported the least. Also, it is noticeable that in 2020, the reported number of victims are far less than the other years. In three different age group, crime reporting rate significantly reduced by the impact of COVID and its lockdown.
+Table 1a (@tbl-totalsum-table) counts the total number of victims for each age group over the years. It is obvious to find out that Adult victim group is reported the most and the Child victim group is reported the least. Also, it is noticeable that in 2020, the reported number of victims are far less than the other years. In three different age group, crime reporting rate significantly reduced by the impact of COVID and its lockdown.
 
 ```{r}
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-totalsum-bar
+#| tbl-cap: "Number of Reported Victims of Crimes in Different Age Group Over the Years"
 
 #### Bar graph 1a ####
 # Bar graph 1a illustrates the number of reported crimes in different age group over the year from 2014 to 2022. 
@@ -123,8 +127,7 @@ bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Adult, fill = "Adult"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Youth, fill = "Youth"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Child, fill = "Child"), stat = "identity", position = "stack") +
-  labs(title = "Number of Reported Victims of Crimes in Different Age Group Over the Years",
-       x = "Year",
+  labs(x = "Year",
        y = "Number of reported crimes") +
   scale_fill_manual(values = c(Adult = "blue", Youth = "green", Child = "orange"),
                     name = "Age Group") +
@@ -136,13 +139,15 @@ print(bar_plot)
 
 ```
 
-Bar graph 1a refers table 1a. By visualizing the age group into a bar per year, it is clear to see that majority of victims of reported crimes are adult. Also, the bars are showing ascending order from the year 2014 to 2018 but the reported crimes significantly drop between 2019 and 2020. One possible reason is because of COVID. Correlation between COVID pandemic and report crime rates 논문 찾아서 첨부
+Bar graph (@tbl-totalsum-bar) refers table (@tbl-totalsum-table). By visualizing the age group into a bar per year, it is clear to see that majority of victims of reported crimes are adult. Also, the bars are showing ascending order from the year 2014 to 2018 but the reported crimes significantly drop between 2019 and 2020. One possible reason is because of COVID. Correlation between COVID pandemic and report crime rates 논문 찾아서 첨부
 
 ```{r}
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-sv-bar
+#| tbl-cap: "Victims Count of Sexual Violation by Age Group Over the Years"
 
 # Load required libraries
 library(dplyr)
@@ -158,8 +163,7 @@ sexual_violation_data <- cleaned_data %>%
 # Create a bar graph for Sexual Violation with groups for AGE_GROUP
 bar_plot <- ggplot(sexual_violation_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Victims Count of Sexual Violation by Age Group Over the Years",
-       x = "Year",
+  labs(x = "Year",
        y = "Number of Reported Victims of Sexual Violation",
        fill = "Age Group") +
   theme_minimal() +
@@ -177,6 +181,8 @@ From 2014 to 2020, the trend shows that the adult group is twice the size of the
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-a-bar
+#| tbl-cap: "Victims Count of Assault by Age Group Over the Years"
 
 # Load required libraries
 library(dplyr)
@@ -204,13 +210,15 @@ bar_plot <- ggplot(assault_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GRO
 print(bar_plot)
 ```
 
-The graph illustrates the ascending trend in number of victims of assault in city of Toronto over the year from 2014 to 2022. COVID does not seem to be a factor that skews the trend. Though, size of both child and youth victim groups got halved. Compared to child victim group, size of youth victim group grows fast.
+The graph (@tbl-a-bar) illustrates the ascending trend in number of victims of assault in city of Toronto over the year from 2014 to 2022. COVID does not seem to be a factor that skews the trend. Though, size of both child and youth victim groups got halved. Compared to child victim group, size of youth victim group grows fast.
 
 ```{r}
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-r-bar
+#| tbl-cap: "Victims Count of Robbery by Age Group Over the Years"
 
 # Load required libraries
 library(dplyr)
@@ -226,8 +234,7 @@ robbery_data <- cleaned_data %>%
 # Create a bar graph for Robbery with groups for AGE_GROUP
 bar_plot <- ggplot(robbery_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GROUP)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Victims Count of Robbery by Age Group Over the Years",
-       x = "Year",
+  labs(x = "Year",
        y = "Number of Reported Victims of Robbery",
        fill = "Age Group") +
   theme_minimal() +
@@ -238,13 +245,15 @@ bar_plot <- ggplot(robbery_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GRO
 print(bar_plot)
 ```
 
-As of 2018, youth group of victims of robbery diminished and it keeps at the lower level. COVID pandemic is the factor of bar graphs on the number of victim of robbery in different age group over the year. In 2020, victims of robbery in every age group significantly decreased. We could assume that lockdown mandate affect the decrease in victims.
+Graph (@tbl-r-bar) depicts that as of 2018, youth group of victims of robbery diminished and it keeps at the lower level. COVID pandemic is the factor of bar graphs on the number of victim of robbery in different age group over the year. In 2020, victims of robbery in every age group significantly decreased. We could assume that lockdown mandate affect the decrease in victims.
 
 ```{r}
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-crimetype-table
+#| tbl-cap: "Total number of victims counted for each crime from the year 2014 to 2022"
 
 # Load required libraries
 library(dplyr)
@@ -280,6 +289,8 @@ flextable(head(pivoted_table2))
 #| eval: true
 #| warning: false
 #| message: false
+#| label: tbl-crimesubtype-bar
+#| tbl-cap: "Victims Count by Crime Subtype Over the Years"
 
 # Load required libraries
 library(dplyr)
@@ -293,8 +304,7 @@ bar_plot <- ggplot(pivoted_table2, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Assault, fill = "Assault"), stat = "identity", position = "stack") +
   geom_bar(aes(y = `Sexual Violation`, fill = "Sexual Violation"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Robbery, fill = "Robbery"), stat = "identity", position = "stack") +
-  labs(title = "Victims Count by Crime Subtype Over the Years",
-       x = "Year",
+  labs(x = "Year",
        y = "Number of Reported Victims of Crimes") +
   scale_fill_manual(values = c("Assault" = "grey", "Sexual Violation" = "brown", "Robbery" = "pink"),
                     name = "Crime Subtype") +
