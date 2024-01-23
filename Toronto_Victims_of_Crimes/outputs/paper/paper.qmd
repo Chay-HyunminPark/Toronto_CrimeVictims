@@ -276,11 +276,11 @@ crime_subtype_table <- filtered_data %>%
   summarise(Victims_Count = sum(COUNT_))
 
 # Pivot the data to have Assault, Sexual Violation, Robbery as columns
-pivoted_table <- crime_subtype_table %>%
+pivoted_table2 <- crime_subtype_table %>%
   pivot_wider(names_from = SUBTYPE, values_from = Victims_Count, values_fill = 0)
 
 # Print the table using kable with additional styling
-kable(pivoted_table, caption = "Total number of victims counted for each crime from the year 2014 to 2022", format = "html") %>%
+kable(pivoted_table2, caption = "Total number of victims counted for each crime from the year 2014 to 2022", format = "html") %>%
   kable_styling(full_width = FALSE) %>%
   add_header_above(c(" ", "Victims Count" = 3))
 
