@@ -132,7 +132,7 @@ bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Child, fill = "Child"), stat = "identity", position = "stack") +
   labs(x = "Year",
        y = "Number of reported crimes") +
-  scale_fill_manual(values = c(Adult = "blue", Youth = "green", Child = "orange"),
+  scale_fill_manual(values = c(Adult = "skyblue", Youth = "orange", Child = "pink"),
                     name = "Age Group") +
   theme_minimal() +
   scale_x_continuous(breaks = seq(2014, 2022, by = 1))
@@ -171,7 +171,7 @@ bar_plot <- ggplot(sexual_violation_data, aes(x = REPORT_YEAR, y = COUNT_, fill 
        fill = "Age Group") +
   theme_minimal() +
   scale_x_continuous(breaks = seq(min(sexual_violation_data$REPORT_YEAR), max(sexual_violation_data$REPORT_YEAR), by = 1)) +
-  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
+  scale_fill_manual(values = c("Child" = "pink", "Youth" = "orange", "Adult" = "skyblue"))
 
 # Print the bar plot
 print(bar_plot)
@@ -206,7 +206,7 @@ bar_plot <- ggplot(assault_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GRO
        fill = "Age Group") +
   theme_minimal() +
   scale_x_continuous(breaks = seq(min(assault_data$REPORT_YEAR), max(assault_data$REPORT_YEAR), by = 1)) +
-  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
+  scale_fill_manual(values = c("Child" = "pink", "Youth" = "orange", "Adult" = "skyblue"))
 
 # Print the bar plot
 print(bar_plot)
@@ -241,7 +241,7 @@ bar_plot <- ggplot(robbery_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GRO
        fill = "Age Group") +
   theme_minimal() +
   scale_x_continuous(breaks = seq(min(robbery_data$REPORT_YEAR), max(robbery_data$REPORT_YEAR), by = 1)) +
-  scale_fill_manual(values = c("Child" = "yellow", "Youth" = "orange", "Adult" = "skyblue"))
+  scale_fill_manual(values = c("Child" = "pink", "Youth" = "orange", "Adult" = "skyblue"))
 
 # Print the bar plot
 print(bar_plot)
@@ -284,38 +284,6 @@ pivoted_table_2 <- crime_subtype_table %>%
 kable(pivoted_table_2, caption = "Total number of victims counted for each crime from the year 2014 to 2022", format = "html") %>%
   kable_styling(full_width = FALSE) %>%
   add_header_above(c(" ", "Victims Count" = 3))
-
-```
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-#| label: fig-subtype-graph
-#| fig-cap: "Victims Count by Crime Subtype Over the Years"
-
-# Load required libraries
-library(dplyr)
-library(ggplot2)
-
-
-# Assuming 'pivoted_table_2' is the table with Assault, Sexual Violation, Robbery columns from the above table code
-
-# Create bar graphs for each crime subtype
-bar_plot <- ggplot(pivoted_table_2, aes(x = REPORT_YEAR)) +
-  geom_bar(aes(y = Assault, fill = "Assault"), stat = "identity", position = "stack") +
-  geom_bar(aes(y = `Sexual Violation`, fill = "Sexual Violation"), stat = "identity", position = "stack") +
-  geom_bar(aes(y = Robbery, fill = "Robbery"), stat = "identity", position = "stack") +
-  labs(x = "Year",
-       y = "Number of Reported Victims of Crimes") +
-  scale_fill_manual(values = c("Assault" = "grey", "Sexual Violation" = "brown", "Robbery" = "pink"),
-                    name = "Crime Subtype") +
-  theme_minimal() +
-  scale_x_continuous(breaks = seq(2014, 2022, by = 1))
-
-# Print the bar plot
-print(bar_plot)
 
 ```
 
