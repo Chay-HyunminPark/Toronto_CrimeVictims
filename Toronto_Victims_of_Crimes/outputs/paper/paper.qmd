@@ -1,7 +1,8 @@
 ---
 title: "Decoding Toronto's Crime Patterns: A Comprehensive Analysis of Victims and Trends (2014-2022)"
 author: "Chay Park"
-date: 'January 23, 2024'
+date: today
+date-format: long
 format: pdf
 editor: visual
 bibliography: references.bib
@@ -9,6 +10,14 @@ prefer-html: true
 toc: true
 toc-depth: 3
 ---
+
+∗Code and data supporting this analysis is available at:
+
+<https://github.com/Chay-HyunminPark/Toronto_CrimeVictims.git>[^1].
+
+[^1]: View the repository on GitHub.
+
+...
 
 ```{r}
 #| echo: false
@@ -49,14 +58,14 @@ The table (@tbl-totalsum-table) above illustrates the overarching trend in the n
 #| warning: false
 #| message: false
 #| label: tbl-totalsum-table
-#| tbl-cap: "Total sum of victims in different age group throughout the years"
+#| tbl-cap: "Total Sum of Victims in Different Age Groups Throughout the Years"
 
 #### Table 1a ####
 # Count the Child group victims, Youth group victims, Adult group victims over the year from 2014 to 2022
 ####  ####
 
 # Install the necessary packages if not already installed
-install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse", "kableExtra"))
+# install.packages(c("opendatatoronto", "knitr", "lubridate", "tidyverse", "kableExtra"))
 
 # Load required libraries
 library(dplyr)
@@ -111,7 +120,7 @@ Table 1 (@tbl-totalsum-table) counts the total number of victims for each age gr
 #| warning: false
 #| message: false
 #| label: fig-totalsum-graph
-#| fig-cap: "Number of Reported Victims of Crimes in Different Age Group Over the Years"
+#| fig-cap: "Number of Reported Victims of Crimes in Different Age Groups Over the Years"
 
 #### Bar graph 1a ####
 # Bar graph 1a illustrates the number of reported crimes in different age group over the year from 2014 to 2022. 
@@ -129,7 +138,7 @@ bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
   geom_bar(aes(y = Youth, fill = "Youth"), stat = "identity", position = "stack") +
   geom_bar(aes(y = Child, fill = "Child"), stat = "identity", position = "stack") +
   labs(x = "Year",
-       y = "Number of reported crimes") +
+       y = "Number of Reported Victims of Crimes") +
   scale_fill_manual(values = c(Adult = "skyblue", Youth = "orange", Child = "pink"),
                     name = "Age Group") +
   theme_minimal() +
@@ -137,7 +146,6 @@ bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
 
 # Print the bar plot
 print(bar_plot)
-
 ```
 
 Graph 1 (@fig-totalsum-graph) corresponds to the information presented in table 1 (@tbl-totalsum-table). Visualizing the data by age group across each year reveals that the majority of reported crime victims fall into the "Adult" category. Notably, the bars exhibit an ascending trend from 2014 to 2018. However, a conspicuous drop in reported crimes is observed between 2019 and 2020. One plausible explanation for this decline is attributed to the impact of COVID-19, which significantly influenced crime reporting rates during this period.
@@ -255,7 +263,7 @@ The analysis reveals notable trends in victims of crimes in Toronto from 2014 to
 #| warning: false
 #| message: false
 #| label: tbl-crimetype-table
-#| tbl-cap: "Total number of victims counted for each crime from the year 2014 to 2022"
+#| tbl-cap: "Total Number of Victims Counted for Each Crime from the Year 2014 to 2022"
 
 # Load required libraries
 library(dplyr)
@@ -284,7 +292,6 @@ pivoted_table_2 <- crime_subtype_table %>%
 kable(pivoted_table_2, caption = "Total number of victims counted for each crime from the year 2014 to 2022", format = "html") %>%
   kable_styling(full_width = FALSE) %>%
   add_header_above(c(" ", "Victims Count" = 3))
-
 ```
 
 The onset of the COVID-19 pandemic in late 2019 introduced a significant factor that impacted crime trends throughout the subsequent years, especially in 2020 and extending up to 2022. One plausible explanation is the reduction in physical interactions among individuals, potentially leading to a decline in contact-based offenses such as sexual violence and robbery. However, it is crucial not to overlook the possibility of an increase in domestic violence during this period. Domestic settings may contribute to instances of sexual violence, presenting a contrasting outcome.
