@@ -3,12 +3,16 @@ title: "Decoding Toronto's Crime Patterns: A Comprehensive Analysis of Victims a
 author: "Chay Park"
 date: today
 date-format: long
+bibliography: references.bib
+abstract: In the period from 2014 to 2022, including the global Novel Coronavirus pandemic in 2019, this paper scrutinizes the Toronto Police annual statistical report on victims of crimes. Analyzing this extensive dataset reveals a correlation between the pandemic and crime rates, emphasizing broader trends in the top three crimes across different age groups. The findings underscore the nuanced relationship between external events, law enforcement, and crime reporting, offering insights into the complex interplay between specific events and crime statistics. This research contributes to a comprehensive understanding of societal dynamics, highlighting the potential impact of the pandemic on both crime rates and the reporting of victims of crimes over the years.
 format: pdf
 editor: visual
-bibliography: references.bib
 prefer-html: true
 toc: true
 toc-depth: 3
+toc-title: Contents
+number-sections: true
+number-depth: 3
 ---
 
 ∗Code and data supporting this analysis is available at:
@@ -34,11 +38,7 @@ toc-depth: 3
 # Prerequisites: Need to know where to get Toronto Police Annual Report - Victims of Crimes
 ```
 
-## Abstract
-
-In the period from 2014 to 2022, including the global Novel Coronavirus pandemic in 2019, this paper scrutinizes the Toronto Police annual statistical report on victims of crimes. Analyzing this extensive dataset reveals a correlation between the pandemic and crime rates, emphasizing broader trends in the top three crimes across different age groups. The findings underscore the nuanced relationship between external events, law enforcement, and crime reporting, offering insights into the complex interplay between specific events and crime statistics. This research contributes to a comprehensive understanding of societal dynamics, highlighting the potential impact of the pandemic on both crime rates and the reporting of victims of crimes over the years.
-
-# 1 Introduction
+# Introduction
 
 Analyzing this dataset becomes imperative as it unravels a nuanced narrative beneath the overarching claim of declining crime rates in Canada, as reported by Statistics Canada. Contrary to the general trend, the Statista Research department asserts that the overall crime rate in Canada has consistently decreased since 2000, with the 2021 crime rate approximately 30 percent lower than its peak in 2003. Property crime aligns with this decline, dropping by 30.6 percent during the same period (Statista Research Department 2021). However, a surprising surge in violent crime rates in 2021 challenges this narrative, suggesting a potential consequence of crime rates rebounding after a decline during the pandemic. This analysis focuses on discerning general trends in victims reporting specific crimes---robbery, assault, and sexual violation---utilizing tables and graphs to visualize these trends from 2014 to 2022. The objective is to identify distinctive patterns within the trend, considering variations across age groups and different crime types. Additionally, an exploration of potential correlations with external factors, such as the global pandemic, will be conducted.
 
@@ -46,7 +46,7 @@ This paper employs R (R Core Team 2020) to analyze a dataset sourced from openda
 
 The paper begins with a comprehensive overview, presenting a table illustrating the total number of victims across various age groups over the specified period. This overview is complemented by corresponding graphs derived from the table. The subsequent section delves into bar graphs detailing the reported victims' numbers within distinct age groups, individually addressing sexual violation, assault, and robbery. Finally, a concise table is presented, offering a quantitative measure of the number of victims for each crime across the report years.
 
-# 2 Data
+# Data
 
 The dataset can be analyzed in R (R Core Team 2020) using various packages. Notable packages include ggplot2 (Wickham et al. 2016) for creating graphical representations, kableExtra (Zhu et al. 2021) for enhancing table aesthetics, and lubridate (Grolemund et al. 2021) for handling date-related operations. Additionally, the Tidyverse framework (Wickham et al. 2019) provides a cohesive suite of tools, while Dplyr (Wickham et al. 2021) is specifically useful for data manipulation. Knitr (Xie 2014) plays a crucial role in generating dynamic reports. Leveraging these packages allows for comprehensive data analysis, aiding in the creation of informative tables and figures that contribute to unraveling the narrative of crime victims in Toronto.
 
@@ -114,6 +114,7 @@ kable(pivoted_table, caption = "Count of Child, Youth, and Adult group victims o
 
 Table 1 (@tbl-totalsum-table) counts the total number of victims for each age group over the years. It is evident that the "Adult" victim group has consistently reported the highest number of incidents, while the "Child" victim group reports the least. Notably, the year 2020 stands out, revealing a substantial reduction in reported victim counts across all three age groups. This decline is attributed to the impact of COVID-19 and the ensuing lockdown measures, resulting in a significant reduction in crime reporting rates.
 
+\newpage
 ```{r}
 #| echo: false
 #| eval: true
@@ -147,8 +148,9 @@ bar_plot <- ggplot(pivoted_table, aes(x = REPORT_YEAR)) +
 # Print the bar plot
 print(bar_plot)
 ```
-
 Graph 1 (@fig-totalsum-graph) corresponds to the information presented in table 1 (@tbl-totalsum-table). Visualizing the data by age group across each year reveals that the majority of reported crime victims fall into the "Adult" category. Notably, the bars exhibit an ascending trend from 2014 to 2018. However, a conspicuous drop in reported crimes is observed between 2019 and 2020. One plausible explanation for this decline is attributed to the impact of COVID-19, which significantly influenced crime reporting rates during this period.
+
+From 2014 to 2020, graph 2 (@fig-sv-graph), the trend indicates that the adult group is consistently twice the size of the child group. Up until 2020, victims of sexual violation were predominantly from the adult age group. However, as of 2021, the youth victim group has surpassed the number of adult victims.
 
 ```{r}
 #| echo: false
@@ -183,6 +185,7 @@ bar_plot <- ggplot(sexual_violation_data, aes(x = REPORT_YEAR, y = COUNT_, fill 
 print(bar_plot)
 ```
 
+
 ```{r}
 #| echo: false
 #| eval: true
@@ -215,6 +218,8 @@ bar_plot <- ggplot(assault_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GRO
 # Print the bar plot
 print(bar_plot)
 ```
+
+Graph 3 (@fig-a-graph) illustrates an ascending trend in the number of assault victims in the city of Toronto from 2014 to 2022. COVID does not appear to be a factor influencing the trend, although the sizes of both child and youth victim groups have decreased. The youth victim group has experienced a faster growth compared to the child victim group.
 
 ```{r}
 #| echo: false
@@ -249,13 +254,13 @@ bar_plot <- ggplot(robbery_data, aes(x = REPORT_YEAR, y = COUNT_, fill = AGE_GRO
 print(bar_plot)
 ```
 
-From 2014 to 2020, graph 2 (@fig-sv-graph), the trend indicates that the adult group is consistently twice the size of the child group. Up until 2020, victims of sexual violation were predominantly from the adult age group. However, as of 2021, the youth victim group has surpassed the number of adult victims.
-
-Graph 3 (@fig-a-graph) illustrates an ascending trend in the number of assault victims in the city of Toronto from 2014 to 2022. COVID does not appear to be a factor influencing the trend, although the sizes of both child and youth victim groups have decreased. The youth victim group has experienced a faster growth compared to the child victim group.
+\newpage
 
 Graph 4 (@fig-r-graph) depicts that as of 2018, the youth group of robbery victims diminished and has remained at a lower level. The COVID pandemic is a significant factor influencing the bar graphs depicting the number of robbery victims in different age groups over the years. In 2020, victims of robbery in every age group significantly decreased, indicating a possible impact of lockdown mandates on the decrease in victims.
 
 The analysis reveals notable trends in victims of crimes in Toronto from 2014 to 2022. While the overall pattern suggests a decline in reported crimes, the impact of the COVID-19 pandemic is evident in specific crime subtypes and age groups. Sexual violation cases, for instance, witnessed a shift in the dominant age group from adults to youth in 2021. Assault incidents displayed a consistent upward trend, unaffected by the pandemic, but with a reduction in the sizes of child and youth victim groups. In contrast, the number of robbery victims, particularly in the youth group, significantly decreased in 2020, likely influenced by pandemic-related lockdown measures. These findings provide valuable insights into the complex dynamics of crime reporting and its interaction with external events.
+
+\newpage
 
 ```{r}
 #| echo: false
@@ -295,6 +300,8 @@ kable(pivoted_table_2, caption = "Total number of victims counted for each crime
 ```
 
 The onset of the COVID-19 pandemic in late 2019 introduced a significant factor that impacted crime trends throughout the subsequent years, especially in 2020 and extending up to 2022. One plausible explanation is the reduction in physical interactions among individuals, potentially leading to a decline in contact-based offenses such as sexual violence and robbery. However, it is crucial not to overlook the possibility of an increase in domestic violence during this period. Domestic settings may contribute to instances of sexual violence, presenting a contrasting outcome.
+
+\newpage
 
 # References
 
