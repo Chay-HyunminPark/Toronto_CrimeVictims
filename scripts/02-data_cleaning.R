@@ -4,7 +4,7 @@ library(lubridate)
 library(tidyverse)
 
 # Read the CSV file
-unedited_data <- read.csv("Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv")
+unedited_data <- read.csv("inputs/data/unedited_data.csv")
 
 # Filter out unknown values for SEX and rows with 'other' values for SUBTYPE
 cleaned_data <- unedited_data %>%
@@ -13,6 +13,6 @@ cleaned_data <- unedited_data %>%
 # Write and download cleaned_CSV file
 write_csv(
   x = cleaned_data,
-  file = "Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"
+  file = "inputs/data/cleaned_data.csv"
 )
 head(cleaned_data)

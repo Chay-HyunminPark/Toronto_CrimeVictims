@@ -17,7 +17,7 @@ number-depth: 3
 
 ∗Code and data supporting this analysis is available at:
 
-<https://github.com/Chay-HyunminPark/Toronto_CrimeVictims.git>[^1].
+<>[^1].
 
 [^1]: View the repository on GitHub.
 
@@ -75,7 +75,7 @@ library(tidyverse)
 library(kableExtra)
 
 # Load the csv file
-cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
+cleaned_data <- read_csv(file = here::here("inputs/data/cleaned_data.csv"))
 
 # Filter rows with Adult, Child, and Youth in AGE_GROUP
 filtered_data <- cleaned_data %>%
@@ -165,7 +165,7 @@ library(dplyr)
 library(ggplot2)
 
 # Load the csv file
-cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
+cleaned_data <- read_csv(file = here::here("inputs/data/cleaned_data.csv"))
 
 # Filter the data for Sexual Violation
 sexual_violation_data <- cleaned_data %>%
@@ -199,7 +199,7 @@ library(dplyr)
 library(ggplot2)
 
 # Load the csv file
-cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
+cleaned_data <- read_csv(file = here::here("inputs/data/cleaned_data.csv"))
 
 # Filter the data for Assault
 assault_data <- cleaned_data %>%
@@ -234,7 +234,7 @@ library(dplyr)
 library(ggplot2)
 
 # Load the csv file
-cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
+cleaned_data <- read_csv(file = here::here("inputs/data/cleaned_data.csv"))
 
 # Filter the data for Robbery
 robbery_data <- cleaned_data %>%
@@ -278,7 +278,7 @@ library(tidyverse)
 library(kableExtra)
 
 # Load the csv file
-cleaned_data <- read_csv(file = here::here("Toronto_Victims_of_Crimes/inputs/data/cleaned_data.csv"))
+cleaned_data <- read_csv(file = here::here("inputs/data/cleaned_data.csv"))
 
 # Filter data for the years 2014 to 2022
 filtered_data <- cleaned_data %>%

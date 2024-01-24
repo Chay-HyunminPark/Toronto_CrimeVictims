@@ -42,6 +42,6 @@ victims_statistics
 # Write CSV file
 write_csv(
   x = victims_statistics,
-  file = "Toronto_Victims_of_Crimes/inputs/data/unedited_data.csv"
+  file = "inputs/data/unedited_data.csv"
 )
 head(victims_statistics)
