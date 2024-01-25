@@ -9,7 +9,6 @@
 # Date: 20 January 2024
 # Contact: chay.park@mail.utoronto.ca
 # License: MIT
-# Pre-requisites:
 
 #### Workspace setup ####
 

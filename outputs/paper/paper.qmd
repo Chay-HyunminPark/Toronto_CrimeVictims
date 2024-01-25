@@ -1,27 +1,21 @@
 ---
-title: "Decoding Toronto's Crime Patterns: A Comprehensive Analysis of Victims and Trends (2014-2022)"
+title: "Decoding Toronto's Crime Patterns"
+subtitle: "A Comprehensive Analysis of Victims and Trends (2014-2022)"
 author: "Chay Park"
 date: today
 date-format: long
-bibliography: references.bib
-abstract: In the period from 2014 to 2022, including the global Novel Coronavirus pandemic in 2019, this paper scrutinizes the Toronto Police annual statistical report on victims of crimes. Analyzing this extensive dataset reveals a correlation between the pandemic and crime rates, emphasizing broader trends in the top three crimes across different age groups. The findings underscore the nuanced relationship between external events, law enforcement, and crime reporting, offering insights into the complex interplay between specific events and crime statistics. This research contributes to a comprehensive understanding of societal dynamics, highlighting the potential impact of the pandemic on both crime rates and the reporting of victims of crimes over the years.
+abstract: "In the period from 2014 to 2022, including the global Novel Coronavirus pandemic in 2019, this paper scrutinizes the Toronto Police annual statistical report on victims of crimes. Analyzing this extensive dataset reveals a correlation between the pandemic and crime rates, emphasizing broader trends in the top three crimes across different age groups. The findings underscore the nuanced relationship between external events, law enforcement, and crime reporting, offering insights into the complex interplay between specific events and crime statistics. This research contributes to a comprehensive understanding of societal dynamics, highlighting the potential impact of the pandemic on both crime rates and the reporting of victims of crimes over the years."
 format: pdf
 editor: visual
 prefer-html: true
 toc: true
 toc-depth: 3
 toc-title: Contents
+thanks: "Code and data are available at: https://github.com/Chay-HyunminPark/Toronto_CrimeVictims."
 number-sections: true
 number-depth: 3
+bibliography: references.bib
 ---
-
-∗Code and data supporting this analysis is available at:
-
-<>[^1].
-
-[^1]: View the repository on GitHub.
-
-...
 
 ```{r}
 #| echo: false
@@ -73,6 +67,9 @@ library(knitr)
 library(lubridate)
 library(tidyverse)
 library(kableExtra)
+
+# Set seed for reproducibility
+set.seed(123)
 
 # Load the csv file
 cleaned_data <- read_csv(file = here::here("inputs/data/cleaned_data.csv"))
